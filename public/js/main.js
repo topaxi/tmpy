@@ -22,10 +22,10 @@ bind(drop, 'drop', function(e) {
     li.appendChild(progress)
     id('uploads').appendChild(li)
 
-    upload(file, function(e) {
+    upload(file, function(e, loaded, total) {
       if (e.lengthComputable) {
-        progress.max = e.total
-        progress.value = e.loaded
+        progress.max   = total
+        progress.value = loaded
       }
     }, function() {
       var a = create('a')
@@ -77,10 +77,10 @@ function ready(fun) {
 
 function progress(fun) {
   return function(e) {
-    var position = e.position  || e.loaded
-      , total    = e.totalSize || e.total
+    var loaded = e.position  || e.loaded
+      , total  = e.totalSize || e.total
 
-    fun.call(this, e, position, total)
+    fun.call(this, e, loaded, total)
   }
 }
 
