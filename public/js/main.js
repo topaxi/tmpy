@@ -3,6 +3,7 @@
 var document = window.document
   , drop     = id('drop')
   , each     = Array.prototype.forEach
+  , maxAge   = tmpy.maxAge * 60 * 1000
 
 bind(drop, 'dragover', preventDefault)
 bind(drop, 'drop', function(e) {
@@ -32,6 +33,8 @@ bind(drop, 'drop', function(e) {
 
       a.href        = this.responseText
       a.textContent = file.name
+
+      li.dataset.created = Date.now()
 
       li.removeChild(progress)
       li.removeChild(span)
@@ -87,5 +90,18 @@ function progress(fun) {
 function create(el) {
   return document.createElement(el)
 }
+
+!function janitor() {
+  var now     = Date.now()
+    , uploads = id('uploads')
+
+  each.call(uploads.children, function(li) {
+    if (now - li.dataset.created >= maxAge) {
+      uploads.removeChild(li)
+    }
+  })
+
+  setTimeout(janitor, 5000)
+}()
 
 })(this)

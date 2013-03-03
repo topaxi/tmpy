@@ -3,6 +3,9 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    if globals
+      script
+        var tmpy = !{JSON.stringify(globals)}
   body
     block content
     script(src='/js/main.js')

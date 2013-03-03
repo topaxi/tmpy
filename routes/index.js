@@ -1,11 +1,11 @@
-
-var File     = require('../models/file')
-  , fs       = require('fs')
-  , path     = require('path')
+var File   = require('../models/file')
+  , fs     = require('fs')
+  , path   = require('path')
+  , config = require('../config.json')
 
 module.exports = function(app) {
   app.get('/', function(req, res) {
-    res.render('index', { title: 'tmpy - Sharing temporary files' })
+    res.render('index', { title: 'tmpy - Sharing temporary files', globals: { maxAge: config['max-age'] } })
   })
 
   app.post('/upload', function(req, res, next) {
