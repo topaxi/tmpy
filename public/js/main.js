@@ -2,6 +2,7 @@
 
 var document = window.document
   , drop     = id('drop')
+  , each     = Array.prototype.forEach
 
 bind(drop, 'dragover', preventDefault)
 bind(drop, 'drop', function(e) {
@@ -10,9 +11,33 @@ bind(drop, 'drop', function(e) {
 
   var files = e.dataTransfer.files
 
-  for (var i = 0, l = files.length; i < l; ++i) {
-    upload(files[i], function() { console.log(arguments) })
-  }
+  each.call(e.dataTransfer.files, function(file) {
+    var li       = create('li')
+      , progress = create('progress')
+      , span     = create('span')
+
+    span.textContent = file.name
+
+    li.appendChild(span)
+    li.appendChild(progress)
+    id('uploads').appendChild(li)
+
+    upload(file, function(e) {
+      if (e.lengthComputable) {
+        progress.max = e.total
+        progress.value = e.loaded
+      }
+    }, function() {
+      var a = create('a')
+
+      a.href        = this.responseText
+      a.textContent = file.name
+
+      li.removeChild(progress)
+      li.removeChild(span)
+      li.appendChild(a)
+    })
+  })
 }, false)
 
 function id(id) {
@@ -38,7 +63,7 @@ function upload(file, prog, done) {
 
   xhr.open('post', '/upload', true)
 
-  if (progress) bind(ul, 'progress', progress)
+  if (progress) ul.onprogress          = progress
   if (done)     xhr.onreadystatechange = ready(done)
 
   xhr.send(form)
@@ -57,6 +82,10 @@ function progress(fun) {
 
     fun.call(this, e, position, total)
   }
+}
+
+function create(el) {
+  return document.createElement(el)
 }
 
 })(this)
