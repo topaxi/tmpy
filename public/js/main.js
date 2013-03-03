@@ -10,8 +10,6 @@ bind(drop, 'drop', function(e) {
   e.preventDefault()
   e.stopPropagation()
 
-  var files = e.dataTransfer.files
-
   each.call(e.dataTransfer.files, function(file) {
     var li       = create('li')
       , progress = create('progress')
