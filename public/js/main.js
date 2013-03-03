@@ -39,7 +39,7 @@ bind(drop, 'drop', function(e) {
       li.appendChild(a)
     })
   })
-}, false)
+})
 
 function id(id) {
   return document.getElementById(id)
