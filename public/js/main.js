@@ -63,8 +63,8 @@ function upload(file, prog, done) {
 
   xhr.open('post', '/upload', true)
 
-  if (progress) ul.onprogress          = progress
-  if (done)     xhr.onreadystatechange = ready(done)
+  if (prog) ul.onprogress          = progress(prog)
+  if (done) xhr.onreadystatechange = ready(done)
 
   xhr.send(form)
 }
@@ -78,7 +78,7 @@ function ready(fun) {
 function progress(fun) {
   return function(e) {
     var position = e.position  || e.loaded
-        total    = e.totalSize || e.total
+      , total    = e.totalSize || e.total
 
     fun.call(this, e, position, total)
   }
