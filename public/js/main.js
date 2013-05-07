@@ -23,8 +23,9 @@ bind(drop, 'drop', function(e) {
 
     upload(file, function(e, loaded, total) {
       if (e.lengthComputable) {
-        progress.max   = total
-        progress.value = loaded
+        progress.max         = total
+        progress.value       = loaded
+        progress.textContent = 100 / total * loaded + '%'
       }
     }, function() {
       var a = create('a')
