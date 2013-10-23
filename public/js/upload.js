@@ -37,6 +37,7 @@ function Upload(file, target, config) {
   this.chunkNumber = null
   this.chunking    = config.chunking != null ? config.chunking : Upload.chunking
   this.chunks      = this.countChunks()
+  this.data        = config.data || null // additional data to be uploaded
 
   if (config.start)    this.on('start',    config.start   )
   if (config.progress) this.on('progress', config.progress)
@@ -82,6 +83,12 @@ Upload.prototype = {
     if (this.chunking) {
       form.append('first', this.chunkNumber == 0)
       form.append('last',  this.chunkNumber == this.chunks - 1)
+    }
+
+    if (this.data) {
+      for (var i in this.data) {
+        form.append(i, this.data[i])
+      }
     }
 
     form.append(this.fileName, chunk, this.file.name)
