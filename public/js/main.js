@@ -18,7 +18,6 @@ bind(drop, 'drop', function(e) {
         , progress = create('progress')
         , span     = create('span')
 
-      li.id = 'file-'+ this.fileId
       span.textContent = this.file.name
 
       li.appendChild(span)
