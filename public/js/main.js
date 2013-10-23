@@ -1,44 +1,51 @@
 ;(function(window) { 'use strict';
 
 var document = window.document
+  , Upload   = window.Upload
   , drop     = id('drop')
   , each     = Array.prototype.forEach
   , maxAge   = tmpy.maxAge * 60 * 1000
 
-bind(drop, 'dragover', preventDefault)
+Upload.chunking = false
+
+bind(drop, 'drop dragover', preventDefault)
 bind(drop, 'drop', function(e) {
-  e.preventDefault()
   e.stopPropagation()
 
-  each.call(e.dataTransfer.files, function(file) {
-    var li       = create('li')
-      , progress = create('progress')
-      , span     = create('span')
+  Upload.upload(e.dataTransfer.files, {
+    start: function() {
+      var li       = create('li')
+        , progress = create('progress')
+        , span     = create('span')
 
-    span.textContent = file.name
+      li.id = 'file-'+ this.fileId
+      span.textContent = this.file.name
 
-    li.appendChild(span)
-    li.appendChild(progress)
-    id('uploads').appendChild(li)
+      li.appendChild(span)
+      li.appendChild(progress)
+      id('uploads').appendChild(li)
 
-    upload(file, function(e, loaded, total) {
-      if (e.lengthComputable) {
-        progress.max         = total
-        progress.value       = loaded
-        progress.textContent = 100 / total * loaded + '%'
-      }
-    }, function() {
-      var a = create('a')
+      this.on('progress', function(e, loaded, total) {
+        if (e.lengthComputable) {
+          progress.max         = total
+          progress.value       = loaded
+          progress.textContent = 100 / total * loaded + '%'
+        }
+      })
 
-      a.href        = this.responseText
-      a.textContent = file.name
+      this.on('done', function() {
+        var a  = create('a')
 
-      li.dataset.created = Date.now()
+        a.href        = this.xhr.responseText
+        a.textContent = this.file.name
 
-      li.removeChild(progress)
-      li.removeChild(span)
-      li.appendChild(a)
-    })
+        li.dataset.created = Date.now()
+
+        li.removeChild(progress)
+        li.removeChild(span)
+        li.appendChild(a)
+      })
+    }
   })
 })
 
@@ -54,36 +61,6 @@ function bind(el, ev, fun) {
   ev.split(' ').forEach(function(ev) {
     el.addEventListener(ev, fun, false)
   })
-}
-
-function upload(file, prog, done) {
-  var xhr  = new XMLHttpRequest
-    , form = new FormData
-    , ul   = xhr.upload || xhr
-
-  form.append('file', file)
-
-  xhr.open('post', '/upload', true)
-
-  if (prog) ul.onprogress          = progress(prog)
-  if (done) xhr.onreadystatechange = ready(done)
-
-  xhr.send(form)
-}
-
-function ready(fun) {
-  return function() {
-    if (this.readyState == 3) fun.apply(this, arguments)
-  }
-}
-
-function progress(fun) {
-  return function(e) {
-    var loaded = e.position  || e.loaded
-      , total  = e.totalSize || e.total
-
-    fun.call(this, e, loaded, total)
-  }
 }
 
 function create(el) {
