@@ -1,4 +1,4 @@
-;(function(window) { 'use strict';
+!function(window) { 'use strict';
 
 var document = window.document
   , Upload   = window.Upload
@@ -80,4 +80,4 @@ function create(el) {
   setTimeout(janitor, 5000)
 }()
 
-})(this)
+}(this)
