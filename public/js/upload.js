@@ -5,7 +5,7 @@ var slice       = Array.prototype.slice
   , uploadCount = 0
   , fileId      = 0
 
-function upload(files, config) {
+function upload(files, target, config) {
   if (files.length) {
     return slice.call(files).map(up)
   }
@@ -13,17 +13,21 @@ function upload(files, config) {
   return up(file)
 
   function up(file) {
-    return new Upload(file, config).send()
+    return new Upload(file, target, config).send()
   }
 }
 
-function Upload(file, config) {
-  if (this === undefined) return new Upload(file, config)
+function Upload(file, target, config) {
+  if (!this) return new Upload(file, target, config)
+
+  if (!config && typeof target != 'string') {
+    config = target
+  }
 
   this.fileId      = ++fileId
   this.file        = file
   this.fileName    = config.fileName  || Upload.fileName
-  this.target      = config.target    || Upload.target
+  this.target      = config.target    || target || Upload.target
   this.chunkSize   = config.chunkSize || Upload.chunkSize
   this.method      = config.method
   this.events      = {}
