@@ -38,9 +38,9 @@ function Upload(file, target, config) {
   this.chunking    = config.chunking != null ? config.chunking : Upload.chunking
   this.chunks      = Math.round(this.file.size / this.chunkSize + .5)
 
-  if (config.start)    this.events.start    = [ config.start    ]
-  if (config.progress) this.events.progress = [ config.progress ]
-  if (config.done)     this.events.done     = [ config.done     ]
+  if (config.start)    this.on('start',    config.start   )
+  if (config.progress) this.on('progress', config.progress)
+  if (config.done)     this.on('done',     config.done    )
 }
 
 Upload.upload    = upload
