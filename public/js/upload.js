@@ -36,7 +36,7 @@ function Upload(file, target, config) {
   this.chunkTotal  = null
   this.chunkNumber = null
   this.chunking    = config.chunking != null ? config.chunking : Upload.chunking
-  this.chunks      = Math.round(this.file.size / this.chunkSize + .5)
+  this.chunks      = this.countChunks()
 
   if (config.start)    this.on('start',    config.start   )
   if (config.progress) this.on('progress', config.progress)
@@ -64,11 +64,14 @@ Upload.prototype = {
 
     uploadCount++
 
-    this.chunks      = this.chunking ? Math.round(this.file.size / this.chunkSize + .5) : 1
+    this.chunks      = this.chunking ? this.countChunks() : 1
     this.chunkNumber = 0
     this._sendChunk()
 
     return this.trigger('start')
+  }
+  , countChunks: function() {
+    return this.chunks = Math.round(this.file.size / this.chunkSize + .5)
   }
   , _sendChunk: function() {
     var form   = new FormData
