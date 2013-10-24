@@ -17,6 +17,25 @@ function upload(files, target, config) {
   }
 }
 
+function ProgressEvent(e, up) {
+  this.originalEvent    = e
+  this.lengthComputable = e.lengthComputable
+  this.currentTarget    = e.currentTarget
+  this.loaded           = up.chunkNumber * up.chunkSize + up.chunkLoaded
+  this.position         = this.loaded
+  this.target           = e.target
+  this.timeStamp        = e.timeStamp
+  this.file             = up.file
+  this.total            = up.file.size
+  this.totalSize        = this.totalSize
+  this.type             = e.progress
+  this.chunk            = { loaded: up.chunkLoaded
+                          , total:  up.chunkTotal
+                          , number: up.chunkNumber
+                          }
+  this.percent          = 100 / this.total * this.loaded
+}
+
 function Upload(file, target, config) {
   if (!this) return new Upload(file, target, config)
 
@@ -106,7 +125,7 @@ Upload.prototype = {
     this.chunkLoaded = chunkLoaded
     this.chunkTotal  = chunkTotal
 
-    this.trigger('progress', e, this.chunkNumber * this.chunkSize + chunkLoaded, this.file.size)
+    this.trigger('progress', new ProgressEvent(e, this))
   }
   , _ready: function() {
     if (this.chunkNumber == this.chunks - 1) {

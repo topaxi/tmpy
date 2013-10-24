@@ -24,11 +24,11 @@ bind(drop, 'drop', function(e) {
       li.appendChild(progress)
       id('uploads').appendChild(li)
 
-      this.on('progress', function(e, loaded, total) {
+      this.on('progress', function(e) {
         if (e.lengthComputable) {
-          progress.max         = total
-          progress.value       = loaded
-          progress.textContent = 100 / total * loaded + '%'
+          progress.max         = e.total
+          progress.value       = e.loaded
+          progress.textContent = e.percent
         }
       })
 
