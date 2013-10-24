@@ -33,7 +33,7 @@ bind(drop, 'drop', function(e) {
       })
 
       this.on('done', function() {
-        var a  = create('a')
+        var a = create('a')
 
         a.href        = this.xhr.responseText
         a.textContent = this.file.name
