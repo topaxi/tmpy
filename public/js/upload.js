@@ -22,6 +22,7 @@ function Upload(file, target, config) {
 
   if (!config && typeof target != 'string') {
     config = target
+    target = null
   }
 
   this.fileId      = ++fileId
