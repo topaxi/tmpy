@@ -29,9 +29,10 @@ function ProgressEvent(e, up) {
   this.total            = up.file.size
   this.totalSize        = this.totalSize
   this.type             = e.progress
-  this.chunk            = { loaded: up.chunkLoaded
-                          , total:  up.chunkTotal
-                          , number: up.chunkNumber
+  this.chunk            = { loaded:  up.chunkLoaded
+                          , total:   up.chunkTotal
+                          , number:  up.chunkNumber
+                          , percent: 100 / up.chunkTotal * up.chunkLoaded
                           }
   this.percent          = 100 / this.total * this.loaded
 }
