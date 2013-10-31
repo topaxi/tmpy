@@ -174,6 +174,28 @@ Upload.prototype = {
 
     return this
   }
+  , off: function(e, handler) {
+    if (!Array.isArray(this.events[e])) return this
+
+    if (!handler) {
+      this.events[e] = []
+
+      return this
+    }
+
+    var i = this.events[e].indexOf(handler)
+
+    if (i >= 0) this.events[e].splice(i, 1)
+
+    return this
+  }
+  , once: function(e, handler) {
+    this.on(e, function() {
+      handler.apply(this, arguments)
+
+      this.off(e, handler)
+    })
+  }
 }
 
 function sliceFile(file, from, size) {
