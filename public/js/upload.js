@@ -1,3 +1,5 @@
+// Author:  Damian Senn
+// License: MIT
 !function(window) { 'use strict';
 
 var slice       = Array.prototype.slice
@@ -59,6 +61,10 @@ function Upload(file, target, config) {
   this.chunking    = config.chunking != null ? config.chunking : Upload.chunking
   this.chunks      = this.countChunks()
   this.data        = config.data || null // additional data to be uploaded
+
+  if (typeof config == 'function') {
+    this.on('start', config)
+  }
 
   if (config.start)    this.on('start',    config.start   )
   if (config.progress) this.on('progress', config.progress)
