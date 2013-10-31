@@ -52,6 +52,7 @@ function Upload(file, target, config) {
   this.fileName    = config.fileName  || Upload.fileName
   this.target      = config.target    || target || Upload.target
   this.chunkSize   = config.chunkSize || Upload.chunkSize
+  this.accept      = config.accept    || Upload.accept
   this.method      = config.method
   this.events      = {}
   this.xhr         = null // the current XMLHttpRequest
@@ -78,6 +79,7 @@ Upload.fileName  = 'file'
 Upload.max       = 4
 Upload.chunking  = true
 Upload.chunkSize = 2 * 1024 * 1024
+Upload.accept    = 'application/json'
 
 Upload.prototype = {
     constructor: Upload
@@ -120,6 +122,7 @@ Upload.prototype = {
 
     form.append(this.fileName, chunk, this.file.name)
 
+    xhr.setRequestHeader('Accept', this.accept)
     xhr.open(this.method || Upload.method, this.target, true)
 
     upload.onprogress = progress(this._progress, this)
