@@ -124,6 +124,7 @@ Upload.prototype = {
 
     xhr.open(this.method || Upload.method, this.target, true)
     xhr.setRequestHeader('Accept', this.accept)
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
 
     upload.onprogress = progress(this._progress, this)
 
