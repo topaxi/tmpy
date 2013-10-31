@@ -141,11 +141,14 @@ Upload.prototype = {
   , _ready: function() {
     if (this.chunkNumber == this.chunks - 1) {
       fileDone()
+      this.trigger('ready', this.xhr)
       this.trigger('done', this.xhr)
 
       this.xhr = this.chunkLoaded = this.chunkTotal = null
     }
     else {
+      this.trigger('ready', this.xhr)
+      this.trigger('chunk done', this.xhr)
       this.chunkNumber++
       this._sendChunk()
     }
