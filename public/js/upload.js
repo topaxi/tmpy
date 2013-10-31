@@ -122,8 +122,8 @@ Upload.prototype = {
 
     form.append(this.fileName, chunk, this.file.name)
 
-    xhr.setRequestHeader('Accept', this.accept)
     xhr.open(this.method || Upload.method, this.target, true)
+    xhr.setRequestHeader('Accept', this.accept)
 
     upload.onprogress = progress(this._progress, this)
 
