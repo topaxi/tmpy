@@ -110,8 +110,8 @@ Upload.prototype = {
       , chunk  = this.chunking ? sliceFile(this.file, this.chunkNumber, this.chunkSize) : this.file
 
     if (this.chunking) {
-      form.append('first', this.chunkNumber == 0)
-      form.append('last',  this.chunkNumber == this.chunks - 1)
+      form.append('first', +(this.chunkNumber == 0))
+      form.append('last',  +(this.chunkNumber == this.chunks - 1))
     }
 
     if (this.data) {
