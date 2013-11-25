@@ -29,7 +29,7 @@ function ProgressEvent(e, up) {
   this.timeStamp        = e.timeStamp
   this.file             = up.file
   this.total            = up.file.size
-  this.totalSize        = this.totalSize
+  this.totalSize        = e.total
   this.type             = e.progress
   this.chunk            = { loaded:  up.chunkLoaded
                           , total:   up.chunkTotal
