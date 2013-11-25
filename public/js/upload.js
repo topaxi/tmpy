@@ -47,39 +47,42 @@ function Upload(file, target, config) {
     target = null
   }
 
-  this.fileId      = ++fileId
-  this.file        = file
-  this.fileName    = config.fileName  || Upload.fileName
-  this.target      = config.target    || target || Upload.target
-  this.chunkSize   = config.chunkSize || Upload.chunkSize
-  this.accept      = config.accept    || Upload.accept
-  this.method      = config.method
-  this.events      = {}
-  this.xhr         = null // the current XMLHttpRequest
-  this.chunkLoaded = null
-  this.chunkTotal  = null
-  this.chunkNumber = null
-  this.chunking    = config.chunking != null ? config.chunking : Upload.chunking
-  this.chunks      = this.countChunks()
-  this.data        = config.data || null // additional data to be uploaded
+  this.fileId          = ++fileId
+  this.file            = file
+  this.fileName        = config.fileName  || Upload.fileName
+  this.target          = config.target    || target || Upload.target
+  this.chunkSize       = config.chunkSize || Upload.chunkSize
+  this.accept          = config.accept    || Upload.accept
+  this.method          = config.method
+  this.events          = {}
+  this.xhr             = null // the current XMLHttpRequest
+  this.chunkLoaded     = null
+  this.chunkTotal      = null
+  this.chunkNumber     = null
+  this.chunking        = config.chunking != null ? config.chunking : Upload.chunking
+  this.chunks          = this.countChunks()
+  this.data            = config.data || null // additional data to be uploaded
+  this.prependQueue    = !!config.prependQueue
+  this.processResponse = config.processResponse || Upload.processResponse
 
   if (typeof config == 'function') {
     this.on('start', config)
   }
 
-  if (config.start)    this.on('start',    config.start   )
-  if (config.progress) this.on('progress', config.progress)
-  if (config.done)     this.on('done',     config.done    )
+  if (config.start)    this.once('start',    config.start   )
+  if (config.progress) this.on  ('progress', config.progress)
+  if (config.done)     this.once('done',     config.done    )
 }
 
-Upload.upload    = upload
-Upload.target    = '/upload'
-Upload.method    = 'post'
-Upload.fileName  = 'file'
-Upload.max       = 4
-Upload.chunking  = true
-Upload.chunkSize = 2 * 1024 * 1024
-Upload.accept    = 'application/json'
+Upload.upload          = upload
+Upload.target          = '/upload'
+Upload.method          = 'post'
+Upload.fileName        = 'file'
+Upload.max             = 4
+Upload.chunking        = true
+Upload.chunkSize       = 2 * 1024 * 1024
+Upload.accept          = 'application/json'
+Upload.processResponse = function(xhr) { return xhr }
 
 Upload.prototype = {
     constructor: Upload
@@ -87,18 +90,20 @@ Upload.prototype = {
     if (method) this.method = method
 
     if (uploadCount >= Upload.max) {
-      globalQueue.push(this)
+      globalQueue[this.prependQueue ? 'unshift' : 'push'](this)
 
       return
     }
 
     uploadCount++
 
-    this.chunks      = this.chunking ? this.countChunks() : 1
-    this.chunkNumber = 0
-    this._sendChunk()
+    this.onbeforesend(function() {
+      this.chunks      = this.chunking ? this.countChunks() : 1
+      this.chunkNumber = 0
+      this._sendChunk()
 
-    return this.trigger('start')
+      this.trigger('start')
+    }.bind(this))
   }
   , countChunks: function() {
     return this.chunks = Math.round(this.file.size / this.chunkSize + .5)
@@ -139,16 +144,19 @@ Upload.prototype = {
     this.trigger('progress', new ProgressEvent(e, this))
   }
   , _ready: function() {
+    var res = this.processResponse(this.xhr)
+
     if (this.chunkNumber == this.chunks - 1) {
-      fileDone()
-      this.trigger('ready', this.xhr)
-      this.trigger('done', this.xhr)
+      this.trigger('ready', res)
+      this.trigger('done',  res)
 
       this.xhr = this.chunkLoaded = this.chunkTotal = null
+
+      fileDone()
     }
     else {
-      this.trigger('ready', this.xhr)
-      this.trigger('chunk done', this.xhr)
+      this.trigger('ready',      res)
+      this.trigger('chunk done', res)
       this.chunkNumber++
       this._sendChunk()
     }
@@ -202,6 +210,9 @@ Upload.prototype = {
 
       this.off(e, handler)
     })
+  }
+  , onbeforesend: function(callback) {
+    callback()
   }
 }
 
