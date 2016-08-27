@@ -1,37 +1,55 @@
-var File     = require('../models/file')
-  , fs       = require('fs')
-  , path     = require('path')
-  , config   = require('../config.json')
-  , basename = path.basename
+const File   = require('../models/file')
+const fs     = require('fs')
+const path   = require('path')
+const config = require('../config.json')
+const multer = require('multer')
 
-module.exports = function(app) {
-  app.get('/', function(req, res) {
-    res.render('index', { title: 'tmpy - Sharing temporary files', globals: { maxAge: config['max-age'] } })
-  })
+const upload = multer({
+  dest: path.join(__dirname, '../uploads')
+})
 
-  app.post('/upload', function(req, res, next) {
-    var file = new File
+const schema = config.https ? 'https' : 'http'
 
-    file.name = req.files.file.name
-    file.size = req.files.file.size
-    file.type = req.files.file.type
-    file.hash = basename(req.files.file.path)
-    file.date = new Date
+const {
+  basename
+} = require('path')
 
-    file.save(function(err) {
-      if (err) return next(err)
-
-      res.send('http://localhost:3000/uploads/'+ file.hash +'\n')
+module.exports = app => {
+  app.get('/', (req, res) => {
+    res.render('index', {
+      title: 'tmpy - Sharing temporary files',
+      clientGlobals: { maxAge: config['max-age'] }
     })
   })
 
-  app.get('/uploads/:id', function(req, res, next) {
-    File.findOne({ 'hash': req.params.id }, function(err, file) {
+  app.post('/upload', upload.any(), (req, res, next) => {
+    let file = new File
+    let [ uploadedFile ] = req.files;
+
+    file.name = uploadedFile.originalname
+    file.size = uploadedFile.size
+    file.type = uploadedFile.mimetype
+    file.hash = uploadedFile.filename
+    file.date = new Date
+
+    file.save(err => {
+      if (err) return next(err)
+
+      res.send(
+        `${schema}://${config.hostname}/uploads/${file.hash}\n`
+      )
+    })
+  })
+
+  app.get('/uploads/:id', (req, res, next) => {
+    File.findOne({ 'hash': req.params.id }, (err, file) => {
+      if (err) return next(err)
+
       // Try to view images and text inline
       if (file.type == 'text/plain' || /^image\//.test(file.type)) {
         res.type(file.type)
-        res.set('Content-Disposition', 'inline; filename="'+ basename(file.name) +'"')
-        res.sendfile(file.path)
+        res.set('Content-Disposition', `inline; filename="${file.name}"`)
+        res.sendFile(file.path)
       }
       else {
         res.download(file.path, file.name)

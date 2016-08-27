@@ -1,7 +1,11 @@
-{ "db": { "host": "localhost"
-        , "name": "tmpy"
-        }
-, "listen": 3000
-, "max-age": 15
-, "janitor": 5
+{
+  "hostname": "tmpy.topaxi.ch",
+  "https": true,
+  "db": {
+    "host": "localhost",
+    "name": "tmpy"
+  },
+  "listen": 3000,
+  "max-age": 15,
+  "janitor": 5
 }

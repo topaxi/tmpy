@@ -1,29 +1,23 @@
-var express = require('express')
-  , http    = require('http')
-  , path    = require('path')
-  , config  = require('./config.json')
+const express    = require('express')
+const morgan     = require('morgan')
+const bodyParser = require('body-parser')
+const http       = require('http')
+const path       = require('path')
+const config     = require('./config.json')
 
-app = express()
+const DEFAULT_PORT = 3000
+const app = express()
 
-app.configure(function(){
-  app.set('port', process.env.PORT || config.listen || 3000)
-  app.set('views', __dirname + '/views')
-  app.set('view engine', 'jade')
-  app.use(express.favicon())
-  app.use(express.logger('dev'))
-  app.use(express.bodyParser({ keepExtensions: false, uploadDir: path.join(__dirname, 'public/uploads') }))
-  app.use(express.methodOverride())
-  app.use(app.router)
-  app.use(express.static(path.join(__dirname, 'public')))
-});
-
-app.configure('development', function(){
-  app.use(express.errorHandler())
-});
+app.set('port', process.env.PORT || config.listen || DEFAULT_PORT)
+app.set('views', './views')
+app.set('view engine', 'pug')
+app.use(morgan('dev'))
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.static('./public'))
 
 require('./routes')(app)
 require('./lib/janitor')
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'))
-});
+http.createServer(app).listen(app.get('port'), () => {
+  console.log(`Express server listening on port ${app.get('port')}`)
+})

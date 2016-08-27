@@ -5,12 +5,12 @@ get() {
   then
     curl -# -O -J -L $1
   else
-    curl -# -O -J -L http://tmpy.topaxi.ch/uploads/$1
+    curl -# -O -J -L https://tmpy.topaxi.ch/uploads/$1
   fi
 }
 
 put() {
-  curl -F file=@$1 http://tmpy.topaxi.ch/upload
+  curl -L -F file=@$1 https://tmpy.topaxi.ch/upload
 }
 
 usage() {

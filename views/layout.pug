@@ -1,11 +1,11 @@
-doctype 5
+doctype html
 html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-    if globals
-      script
-        var tmpy = !{JSON.stringify(globals)}
+    if clientGlobals
+      script.
+        var tmpy = !{JSON.stringify(clientGlobals)}
   body
     block content
     script(src='/js/upload.js')
