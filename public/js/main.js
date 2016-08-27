@@ -1,22 +1,40 @@
 !function(window) { 'use strict';
 
 var document = window.document
-  , Upload   = window.Upload
-  , drop     = id('drop')
-  , each     = Array.prototype.forEach
-  , maxAge   = tmpy.maxAge * 60 * 1000
+var Upload   = window.Upload
+var drop     = id('drop')
+var each     = Array.prototype.forEach
+var maxAge   = tmpy.maxAge * 60 * 1000
 
 Upload.chunking = false
+
+var clicker = document.createElement('input')
+clicker.type = 'file'
+clicker.multiple = true
+
+bind(clicker, 'change', function(e) {
+  upload(e.target.files)
+  e.target.value = null
+})
+bind(clicker, 'drop dragover', function(e) {
+  e.stopImmediatePropagation()
+})
+
+drop.appendChild(clicker)
 
 bind(drop, 'drop dragover', preventDefault)
 bind(drop, 'drop', function(e) {
   e.stopPropagation()
 
-  Upload.upload(e.dataTransfer.files, {
+  upload(e.dataTransfer.files)
+})
+
+function upload(files) {
+  Upload.upload(files, {
     start: function() {
       var li       = create('li')
-        , progress = create('progress')
-        , span     = create('span')
+      var progress = create('progress')
+      var span     = create('span')
 
       span.textContent = this.file.name
 
@@ -46,7 +64,7 @@ bind(drop, 'drop', function(e) {
       })
     }
   })
-})
+}
 
 function id(id) {
   return document.getElementById(id)
@@ -68,7 +86,7 @@ function create(el) {
 
 !function janitor() {
   var now     = Date.now()
-    , uploads = id('uploads')
+  var uploads = id('uploads')
 
   each.call(uploads.children, function(li) {
     if (now - li.dataset.created >= maxAge) {
