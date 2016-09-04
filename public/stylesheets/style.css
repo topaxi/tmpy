@@ -7,6 +7,14 @@ a {
   color: #00B7FF;
 }
 
+.copy {
+  cursor: pointer;
+  margin-left: 0.5rem;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
 #drop {
   display: block;
   line-height: 420px;

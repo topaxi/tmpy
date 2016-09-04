@@ -51,16 +51,41 @@ function upload(files) {
       })
 
       this.on('done', function() {
+        var link = fragment()
         var a = create('a')
+        var copy = create('button')
+
+        var clipboard = new Clipboard(copy, {
+          text: function() {
+            return a.href
+          }
+        })
+
+        link.appendChild(a)
+        link.appendChild(copy)
 
         a.href        = this.xhr.responseText
         a.textContent = this.file.name
+
+        copy.className = 'copy'
+        copy.textContent = '📋'
+        bind(copy, 'mouseleave', function(e) {
+          e.currentTarget.classList.remove('tooltipped', 'tooltipped-s')
+          e.currentTarget.removeAttribute('aria-label')
+        })
+
+        clipboard.on('success', function(e) {
+          showTooltip(e.trigger, 'Copied!')
+        })
+        clipboard.on('error', function(e) {
+          showTooltip(e.trigger, fallbackMessage(e.action))
+        })
 
         li.dataset.created = Date.now()
 
         li.removeChild(progress)
         li.removeChild(span)
-        li.appendChild(a)
+        li.appendChild(link)
       })
     }
   })
@@ -82,6 +107,32 @@ function bind(el, ev, fun) {
 
 function create(el) {
   return document.createElement(el)
+}
+
+function fragment() {
+  return document.createDocumentFragment()
+}
+
+function showTooltip(el, msg) {
+  el.classList.add('tooltipped', 'tooltipped-s')
+  el.setAttribute('aria-label', msg)
+}
+
+function fallbackMessage(action) {
+  var actionMsg = ''
+  var actionKey = action === 'cut' ? 'X' : 'C'
+
+  if (/iPhone|iPad/i.test(navigator.userAgent)) {
+    actionMsg = 'No support :('
+  }
+  else if (/Mac/i.test(navigator.userAgent)) {
+    actionMsg = 'Press ⌘-' + actionKey + ' to ' + action
+  }
+  else {
+    actionMsg = 'Press Ctrl-' + actionKey + ' to ' + action
+  }
+
+  return actionMsg
 }
 
 !function janitor() {

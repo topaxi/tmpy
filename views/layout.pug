@@ -3,10 +3,12 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/tooltip.css')
     if clientGlobals
       script.
         var tmpy = !{JSON.stringify(clientGlobals)}
   body
     block content
     script(src='/js/upload.js')
+    script(src='/js/clipboard.js')
     script(src='/js/main.js')

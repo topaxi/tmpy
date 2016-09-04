@@ -14,6 +14,7 @@ app.set('view engine', 'pug')
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static('./public'))
+app.use('/js', express.static('./node_modules/clipboard/dist'))
 
 require('./routes')(app)
 require('./lib/janitor')
