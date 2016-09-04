@@ -26,11 +26,11 @@ module.exports = app => {
     let file = new File
     let [ uploadedFile ] = req.files;
 
-    file.name = uploadedFile.originalname
-    file.size = uploadedFile.size
-    file.type = uploadedFile.mimetype
-    file.hash = uploadedFile.filename
-    file.date = new Date
+    file.name     = uploadedFile.originalname
+    file.size     = uploadedFile.size
+    file.type     = uploadedFile.mimetype
+    file.filehash = uploadedFile.filename
+    file.date     = new Date
 
     file.save(err => {
       if (err) return next(err)
