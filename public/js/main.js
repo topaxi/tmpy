@@ -19,6 +19,12 @@ bind(clicker, 'change', function(e) {
 bind(clicker, 'drop dragover', function(e) {
   e.stopImmediatePropagation()
 })
+bind(drop, 'dragenter', function(e) {
+  e.target.classList.add('drag-over')
+})
+bind(drop, 'dragleave drop', function(e) {
+  e.target.classList.remove('drag-over')
+})
 
 drop.appendChild(clicker)
 
