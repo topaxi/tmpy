@@ -42,9 +42,8 @@ function upload(files) {
       var progress = create('progress')
       var span     = create('span')
 
-      progress.max         = 1
-      progress.value       = 0
-      progress.textContent = 0
+      progress.max   = 1
+      progress.value = 0
 
       span.textContent = this.file.name
 
@@ -54,14 +53,12 @@ function upload(files) {
 
       this.on('progress', function(e) {
         if (e.lengthComputable) {
-          progress.max         = e.total
-          progress.value       = e.loaded
-          progress.textContent = e.percent
+          progress.max   = e.total
+          progress.value = e.loaded
         }
         else {
-          progress.max         = null
-          progress.value       = null
-          progress.textContent = ''
+          progress.max   = null
+          progress.value = null
         }
       })
 
