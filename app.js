@@ -1,18 +1,15 @@
-const express    = require('express')
-const morgan     = require('morgan')
-const bodyParser = require('body-parser')
-const http       = require('http')
-const path       = require('path')
-const config     = require('./config.json')
+const express = require('express')
+const morgan  = require('morgan')
+const http    = require('http')
+const path    = require('path')
+const config  = require('./lib/config')
 
-const DEFAULT_PORT = 3000
 const app = express()
 
-app.set('port', process.env.PORT || config.listen || DEFAULT_PORT)
+app.set('port', config.port)
 app.set('views', './views')
 app.set('view engine', 'pug')
-app.use(morgan('dev'))
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(morgan(config.logger))
 app.use(express.static('./public'))
 app.use('/js', express.static('./node_modules/clipboard/dist'))
 
