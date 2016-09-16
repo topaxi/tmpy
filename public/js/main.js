@@ -48,8 +48,8 @@ function upload(files) {
 
       span.textContent = this.file.name
 
-      li.appendChild(span)
       li.appendChild(progress)
+      li.appendChild(span)
       id('uploads').appendChild(li)
 
       this.on('progress', function(e) {

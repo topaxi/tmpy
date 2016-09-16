@@ -40,3 +40,28 @@ a {
   padding: 0.5rem;
   border-radius: 5px;
 }
+
+#uploads progress {
+  margin-right: 0.5em;
+}
+
+progress {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  border: 0;
+
+  background: #eee;
+}
+progress::-moz-progress-bar {
+  background: #99d;
+  transition: background-color 100ms;
+}
+progress::-webkit-progress-value {
+  background: #99d;
+  transition: background-color 100ms;
+}
+progress::-webkit-progress-bar {
+  background: #eee;
+}
