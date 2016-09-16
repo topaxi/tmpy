@@ -36,6 +36,10 @@ function upload(files) {
       var progress = create('progress')
       var span     = create('span')
 
+      progress.max         = 1
+      progress.value       = 0
+      progress.textContent = 0
+
       span.textContent = this.file.name
 
       li.appendChild(span)
@@ -47,6 +51,11 @@ function upload(files) {
           progress.max         = e.total
           progress.value       = e.loaded
           progress.textContent = e.percent
+        }
+        else {
+          progress.max         = null
+          progress.value       = null
+          progress.textContent = ''
         }
       })
 
