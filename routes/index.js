@@ -1,8 +1,9 @@
-const File   = require('../models/file')
 const fs     = require('fs')
 const path   = require('path')
-const config = require('../lib/config')
 const multer = require('multer')
+const config = require('../lib/config')
+const File   = require('../models/file')
+const tmpysh = require('../lib/tmpysh')
 
 const upload = multer({
   dest: path.join(__dirname, '../uploads')
@@ -56,4 +57,6 @@ module.exports = app => {
       }
     })
   })
+
+  app.get('/tmpy.sh', (req, res) => res.send(tmpysh()))
 }
