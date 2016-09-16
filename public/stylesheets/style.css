@@ -52,16 +52,23 @@ progress {
 
   border: 0;
 
-  background: #eee;
+  background-color: #eee;
 }
 progress::-moz-progress-bar {
-  background: #99d;
+  background-color: #99d;
   transition: background-color 100ms;
 }
+progress:indeterminate::-moz-progress-bar {
+  background-color: #dd9;
+}
 progress::-webkit-progress-value {
-  background: #99d;
+  background-color: #99d;
   transition: background-color 100ms;
 }
 progress::-webkit-progress-bar {
-  background: #eee;
+  background-color: #eee;
+  transition: background-color 100ms;
+}
+progress:indeterminate::-webkit-progress-bar {
+  background-color: #dd9;
 }
