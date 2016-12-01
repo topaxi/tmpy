@@ -1,10 +1,20 @@
+html {
+  border: 5px dashed #efefef;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
 body {
-  padding: 50px;
+  padding: 25px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: #444;
 }
 
 a {
   color: #00B7FF;
+}
+small {
+  color: ;
 }
 
 .copy {
@@ -19,9 +29,17 @@ a {
   display: block;
   line-height: 420px;
   text-align: center;
-  border: 1px solid #000;
+  border: 3px dashed #d4d2d2;
   position: relative;
   cursor: pointer;
+  background-color: #efefef;
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease;
+}
+
+#drop:hover {
+  background-color: #e6e6e6;
+  border: 3px dashed #b9b9b9;
 }
 
 #drop > input {
@@ -36,9 +54,22 @@ a {
 }
 
 #drop:hover .drop-hint {
-  background: #9d9;
-  padding: 0.5rem;
-  border-radius: 5px;
+  background: #d4d2d2;
+  padding: 1rem;
+  border-radius: 2px;
+  color: #444;
+}
+span.drop-hint {
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease;
+}
+
+ul#uploads {
+  list-style-type: square;
+}
+
+#uploads li {
+  padding: .2rem .5rem;
 }
 
 #uploads progress {
@@ -55,14 +86,14 @@ progress {
   background-color: #eee;
 }
 progress::-moz-progress-bar {
-  background-color: #99d;
+  background-color: #00B7FF;
   transition: background-color 100ms;
 }
 progress:indeterminate::-moz-progress-bar {
   background-color: #dd9;
 }
 progress::-webkit-progress-value {
-  background-color: #99d;
+  background-color: #00B7FF;
   transition: background-color 100ms;
 }
 progress::-webkit-progress-bar {

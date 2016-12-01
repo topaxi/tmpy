@@ -17,7 +17,7 @@
   white-space:pre;
   pointer-events:none;
   content:attr(aria-label);
-  background:rgba(0,0,0,0.8);
+  background:rgba(68,68,68,0.9);
   border-radius:3px;
   -webkit-font-smoothing:subpixel-antialiased
 }
@@ -27,7 +27,7 @@
   display:none;
   width:0;
   height:0;
-  color:rgba(0,0,0,0.8);
+  color:rgba(68,68,68,0.9);
   pointer-events:none;
   content:"";
   border:5px solid transparent
