@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  tmpy:
+    image: node:onbuild
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo
+    environment:
+      - TMPY_IP=0.0.0.0
+      - TMPY_DB_HOST=mongo
+      - TMPY_DB_NAME=admin
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=tmpy
+      - MONGO_INITDB_ROOT_PASSWORD=tmpy
