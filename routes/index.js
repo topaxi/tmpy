@@ -59,5 +59,13 @@ module.exports = app => {
     })
   })
 
+  app.delete('/uploads/:id', (req, res, next) => {
+    File.deleteOne({ 'hash': req.params.id }, err => {
+      if (err) return next(err)
+
+      res.send();
+    })
+  })
+
   app.get('/tmpy.sh', (req, res) => res.send(tmpysh()))
 }
