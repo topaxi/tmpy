@@ -45,6 +45,7 @@ module.exports = app => {
   app.get('/uploads/:id', (req, res, next) => {
     File.findOne({ 'hash': req.params.id }, (err, file) => {
       if (err) return next(err)
+      if (!file) return next()
 
       // Try to view images and text inline
       if (file.type == 'text/plain' || /^image\//.test(file.type)) {
