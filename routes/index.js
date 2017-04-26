@@ -60,10 +60,19 @@ module.exports = app => {
   })
 
   app.delete('/uploads/:id', (req, res, next) => {
-    File.deleteOne({ 'hash': req.params.id }, err => {
+    File.findOne({ 'hash': req.params.id }, (err, file) => {
       if (err) return next(err)
 
-      res.send();
+      if (file) {
+        fs.unlink(file.path, err => {
+          if (err) return next(err)
+
+          res.send()
+        });
+      }
+      else {
+        res.send();
+      }
     })
   })
 
