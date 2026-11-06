@@ -11,10 +11,8 @@ var FileSchema = mongoose.Schema({
   'date':     Date
 })
 
-FileSchema.pre('save', function(next) {
+FileSchema.pre('save', function() {
   this.hash = parseInt(this.filehash, 16).toString(36).slice(0, 6)
-
-  next()
 })
 
 FileSchema.virtual('path').get(function() {

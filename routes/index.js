@@ -33,18 +33,15 @@ module.exports = app => {
     file.filehash = uploadedFile.filename
     file.date     = new Date
 
-    file.save(err => {
-      if (err) return next(err)
-
+    file.save().then(() => {
       res.send(
         `${schema}://${config.hostname}/uploads/${file.hash}\n`
       )
-    })
+    }).catch(next)
   })
 
   app.get('/uploads/:id', (req, res, next) => {
-    File.findOne({ 'hash': req.params.id }, (err, file) => {
-      if (err) return next(err)
+    File.findOne({ 'hash': req.params.id }).then(file => {
       if (!file) return next()
 
       // Try to view images and text inline
@@ -56,13 +53,11 @@ module.exports = app => {
       else {
         res.download(file.path, file.name)
       }
-    })
+    }).catch(next)
   })
 
   app.delete('/uploads/:id', (req, res, next) => {
-    File.findOne({ 'hash': req.params.id }, (err, file) => {
-      if (err) return next(err)
-
+    File.findOne({ 'hash': req.params.id }).then(file => {
       if (file) {
         fs.unlink(file.path, err => {
           if (err) return next(err)
@@ -73,7 +68,7 @@ module.exports = app => {
       else {
         res.send();
       }
-    })
+    }).catch(next)
   })
 
   app.get('/tmpy.sh', (req, res) => res.send(tmpysh()))
